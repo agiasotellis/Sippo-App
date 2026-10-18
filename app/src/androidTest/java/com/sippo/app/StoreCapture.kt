@@ -110,7 +110,8 @@ class StoreCapture {
         var id = 1L
         for (back in 24 downTo 1) {
             val day = today - back
-            val target = goal * (if (back == 9 || back == 16) .62f else .92f + rnd.nextFloat() * .3f)
+            // Goal met every day of the last week (a visible streak), with a couple of misses earlier.
+            val target = goal * (if (back == 9 || back == 16) .62f else 1.02f + rnd.nextFloat() * .22f)
             val n = 5 + rnd.nextInt(3)
             var acc = 0f
             for (i in 0 until n) {
@@ -181,9 +182,9 @@ class StoreCapture {
         // Mid-pour: hold the button on another thread and capture while the stream runs.
         val pour = retry { text("Hold to pour").visibleCenter }
         // Emulator holds run ~50 ms per swipe step.
-        val holder = Thread { device.swipe(pour.x, pour.y, pour.x, pour.y, 20) }
+        val holder = Thread { device.swipe(pour.x, pour.y, pour.x, pour.y, 60) }
         holder.start()
-        pause(700)
+        pause(1_000)
         device.takeScreenshot(File(out, "03_pour.png"))
         holder.join()
         clearCelebration()
@@ -204,9 +205,11 @@ class StoreCapture {
         seed(mascot = Mascot.AXEL, acc = Accessory.BOW, theme = "midnight", todayMl = 2100)
         launch("Hold to pour"); pause(2_500); shot("08_midnight")
 
+        // Free plan for Reminders: debug builds show a "reset purchase" link when Sippo+ is active.
+        seed(premium = false, acc = Accessory.CAP)
+        launch("Hold to pour")
         tapDesc("Reminders"); text("Remind me to drink"); shot("09_reminders")
 
-        seed(premium = false, acc = Accessory.CAP)
         launch("Unlock Sippo+", paywall = true); pause(1_500); shot("10_paywall")
 
         seed(theme = "sunset", mascot = Mascot.PINGO, acc = Accessory.CROWN, todayMl = 2400)
