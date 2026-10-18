@@ -25,10 +25,11 @@ class SmokeTest {
     private val device = UiDevice.getInstance(instr)
     private val pkg = instr.targetContext.packageName
 
-    /** CI emulators sometimes show "System UI / Launcher isn't responding" over everything. */
+    /** CI emulators sometimes show "isn't responding" over everything; the notification prompt can also lag. */
     private fun dismissSystemDialogs() {
         repeat(3) {
-            val w = device.findObject(By.text("Wait")) ?: device.findObject(By.text("Close app")) ?: return
+            val w = device.findObject(By.text("Wait")) ?: device.findObject(By.text("Close app"))
+                ?: device.findObject(By.text("Allow")) ?: return
             w.click()
             device.waitForIdle(1_000)
         }
@@ -75,7 +76,7 @@ class SmokeTest {
         tap("Start drinking")
 
         // Android 13+ asks for notifications here.
-        device.wait(Until.findObject(By.textStartsWith("Allow")), 4_000)?.click()
+        device.wait(Until.findObject(By.text("Allow")), 10_000)?.click()
 
         // Home with the Sippo+ promo.
         text("Today")
