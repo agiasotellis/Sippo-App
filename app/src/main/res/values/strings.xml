@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Sippo</string>
+    <string name="widget_label">Sippo pour</string>
+    <string name="widget_description">See today\'s water and pour 250 ml in one tap</string>
+    <string name="reminder_channel">Drink reminders</string>
+    <string name="reminder_channel_desc">Gentle nudges from your hydration buddy</string>
+</resources>

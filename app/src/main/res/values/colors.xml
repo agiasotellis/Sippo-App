@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="sippo_bg">#F4F3FB</color>
+    <color name="sippo_acc">#5B63EE</color>
+    <color name="sippo_ink">#1F2350</color>
+    <color name="sippo_water">#4A8DFF</color>
+</resources>
