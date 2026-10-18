@@ -90,6 +90,7 @@ class StoreCapture {
     /** Marks the start of a feature in the tour so captions can be synced to the recording. */
     private fun mark(label: String) {
         timeline.append(System.currentTimeMillis()).append('\t').append(label).append('\n')
+        File(out, "timeline.tsv").writeText("start\t$t0\n$timeline")
         Log.i("StoreCapture", "mark $label")
     }
 
@@ -173,9 +174,10 @@ class StoreCapture {
 
         // Mid-pour: hold the button on another thread and capture while the stream runs.
         val pour = retry { text("Hold to pour").visibleCenter }
-        val holder = Thread { device.swipe(pour.x, pour.y, pour.x, pour.y, 400) }
+        // Emulator holds run ~50 ms per swipe step.
+        val holder = Thread { device.swipe(pour.x, pour.y, pour.x, pour.y, 60) }
         holder.start()
-        pause(1_600)
+        pause(1_800)
         device.takeScreenshot(File(out, "03_pour.png"))
         holder.join()
         clearCelebration()
@@ -184,7 +186,7 @@ class StoreCapture {
 
         tapDesc("Stats"); text("This week"); pause(1_200); shot("04_stats")
 
-        tapDesc("History"); text("Export history as CSV")
+        tapDesc("History"); text("Goal met")
         retry { find(By.text("${LocalDate.now().minusDays(2).dayOfMonth}"), "day").click() }
         pause(800); shot("05_history")
 
@@ -233,7 +235,7 @@ class StoreCapture {
 
         mark("pour")
         val pour = retry { text("Hold to pour").visibleCenter }
-        device.swipe(pour.x, pour.y, pour.x, pour.y, 200)
+        device.swipe(pour.x, pour.y, pour.x, pour.y, 40)
         pause(2_500)
         clearCelebration()
 
@@ -298,11 +300,9 @@ class StoreCapture {
         tap("Yay!"); pause(1_000)
 
         mark("history-premium")
-        tapDesc("History"); text("Export history as CSV"); pause(1_000)
+        tapDesc("History"); text("Goal met"); pause(1_000)
         retry { find(By.desc("Previous month") , "prev").click() }
         pause(2_000)
         mark("end")
-
-        File(out, "timeline.tsv").writeText("start\t$t0\n$timeline")
     }
 }
