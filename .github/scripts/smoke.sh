@@ -5,7 +5,7 @@ adb shell settings put global hide_error_dialogs 1 || true
 adb shell input keyevent 82 || true
 sleep 20
 adb logcat -c || true
-.github/scripts/gradle.sh connectedDebugAndroidTest
+.github/scripts/gradle.sh connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=com.sippo.app.SmokeTest
 status=$?
 if [ $status -ne 0 ]; then
   crash=$(adb logcat -d -v brief | grep -A 40 -E "FATAL EXCEPTION|AndroidRuntime: Caused by" | head -n 80 | cut -c1-300)

@@ -41,6 +41,8 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.sippo.app.Screen
@@ -180,10 +182,14 @@ fun HistoryScreen(ui: UiState, vm: SippoViewModel) {
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
             Title("History")
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(Sym.CHEVRON_LEFT, 22, th.acc, Modifier.tap { vm.shiftMonth(-1) }.padding(4.dp))
+                Box(Modifier.tap { vm.shiftMonth(-1) }.semantics { contentDescription = "Previous month" }.padding(4.dp)) {
+                    Icon(Sym.CHEVRON_LEFT, 22, th.acc)
+                }
                 Text(month.format(DateTimeFormatter.ofPattern("MMMM yyyy")), style = ts(14, 700, th.acc))
                 val canNext = month.isBefore(java.time.YearMonth.now())
-                Icon(Sym.CHEVRON_RIGHT, 22, th.acc, Modifier.alpha(if (canNext) 1f else .3f).tap { vm.shiftMonth(1) }.padding(4.dp))
+                Box(Modifier.alpha(if (canNext) 1f else .3f).tap { vm.shiftMonth(1) }.semantics { contentDescription = "Next month" }.padding(4.dp)) {
+                    Icon(Sym.CHEVRON_RIGHT, 22, th.acc)
+                }
             }
         }
         Card(Modifier.fillMaxWidth()) {
