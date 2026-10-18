@@ -81,6 +81,9 @@ class StoreCapture {
     }
     private fun pause(ms: Long) = Thread.sleep(ms)
 
+    /** Waits for [t] but carries on without it: right after navigation UiAutomator can read a stale tree. */
+    private fun soft(t: String) { device.wait(Until.hasObject(By.text(t)), 5_000) }
+
     /** A long emulator hold can cross the goal early; close the celebration if it shows up. */
     private fun clearCelebration() {
         device.wait(Until.findObject(By.text("Yay!")), 1_500)?.let { runCatching { it.click() }; pause(800) }
@@ -191,15 +194,15 @@ class StoreCapture {
         device.wait(Until.findObject(By.text("Undo")), 3_000)?.let { runCatching { it.click() } }
         pause(1_500)
 
-        tapDesc("Stats"); text("This week"); pause(1_200); shot("04_stats")
+        tapDesc("Stats"); soft("This week"); pause(1_500); shot("04_stats")
 
-        tapDesc("History"); find(By.desc("Previous month"), "history")
+        tapDesc("History"); soft("Goal met")
         retry { find(By.text("${LocalDate.now().minusDays(2).dayOfMonth}"), "day").click() }
         pause(800); shot("05_history")
 
-        tapDesc("Awards"); text("WEEKLY CHALLENGE"); shot("06_awards")
+        tapDesc("Awards"); soft("WEEKLY CHALLENGE"); pause(1_000); shot("06_awards")
 
-        tapDesc("Today"); tap("Wardrobe"); text("CHARACTER")
+        tapDesc("Today"); tap("Wardrobe"); soft("CHARACTER")
         tap("Pingo"); tap("Shades"); pause(1_500); shot("07_wardrobe")
 
         seed(mascot = Mascot.AXEL, acc = Accessory.BOW, theme = "midnight", todayMl = 2100)
@@ -208,7 +211,7 @@ class StoreCapture {
         // Free plan for Reminders: debug builds show a "reset purchase" link when Sippo+ is active.
         seed(premium = false, acc = Accessory.CAP)
         launch("Hold to pour")
-        tapDesc("Reminders"); text("Remind me to drink"); shot("09_reminders")
+        tapDesc("Reminders"); soft("Remind me to drink"); pause(1_000); shot("09_reminders")
 
         launch("Unlock Sippo+", paywall = true); pause(1_500); shot("10_paywall")
 
