@@ -27,13 +27,13 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
 
       - name: Unit tests
-        run: ./gradlew --stacktrace testDebugUnitTest
+        run: .github/scripts/gradle.sh testDebugUnitTest
 
       - name: Lint
-        run: ./gradlew --stacktrace lintDebug
+        run: .github/scripts/gradle.sh lintDebug
 
       - name: Assemble debug APK
-        run: ./gradlew --stacktrace assembleDebug
+        run: .github/scripts/gradle.sh assembleDebug
 
       - uses: actions/upload-artifact@v4
         with:
@@ -80,7 +80,7 @@ jobs:
           SIPPO_KEY_ALIAS: ${{ secrets.SIPPO_KEY_ALIAS }}
           SIPPO_KEY_PASSWORD: ${{ secrets.SIPPO_KEY_PASSWORD }}
           VERSION_CODE: ${{ github.run_number }}
-        run: ./gradlew --stacktrace bundleRelease
+        run: .github/scripts/gradle.sh bundleRelease
 
       - uses: actions/upload-artifact@v4
         with:
