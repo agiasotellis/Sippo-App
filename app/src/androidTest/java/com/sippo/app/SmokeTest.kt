@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.By
+import androidx.test.uiautomator.Configurator
 import androidx.test.uiautomator.BySelector
 import androidx.test.uiautomator.StaleObjectException
 import androidx.test.uiautomator.UiDevice
@@ -64,6 +65,9 @@ class SmokeTest {
 
     @Test
     fun walkThroughEverything() {
+        // The UI never idles (water and mascots animate every frame); don't wait for it.
+        Configurator.getInstance().waitForIdleTimeout = 200
+        Configurator.getInstance().actionAcknowledgmentTimeout = 500
         dismissSystemDialogs()
         val launch = instr.targetContext.packageManager.getLaunchIntentForPackage(pkg)!!
             .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
