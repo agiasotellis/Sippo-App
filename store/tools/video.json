@@ -1,0 +1,22 @@
+{
+  "source": "tour1.mp4",
+  "segStart": 1792356283094,
+  "segments": [
+    {"from": "pool", "to": "onboarding", "title": "Meet your hydration buddies", "sub": "Ottie, Pingo & Axel splash into the pool", "bg": "#cfe4ff", "speed": 1.0, "skipStart": 0.6},
+    {"from": "onboarding", "to": "pour", "title": "A goal that fits you", "sub": "Based on your weight and activity", "bg": "#e2e0ff", "speed": 1.6},
+    {"from": "pour", "to": "add", "title": "Just hold to pour", "sub": "Watch the bowl fill up", "bg": "#d4f1e8", "speed": 1.0},
+    {"from": "add", "to": "undo", "title": "Log any drink", "sub": "Water, tea, coffee & juice", "bg": "#fff0c4", "speed": 1.2},
+    {"from": "undo", "to": "edit", "title": "Oops? Undo", "sub": "Take back a drink in one tap", "bg": "#ffe3d3", "speed": 1.0},
+    {"from": "edit", "to": "stats", "title": "Edit any entry", "sub": "Change the drink or the amount", "bg": "#ffdbe6", "speed": 1.2},
+    {"from": "stats", "to": "history", "title": "See your progress", "sub": "Daily ring, weekly chart & streak", "bg": "#e2e0ff", "speed": 1.0},
+    {"from": "history", "to": "awards", "title": "Every day, remembered", "sub": "Tap a day to see what you drank", "bg": "#d4f1e8", "speed": 1.0},
+    {"from": "awards", "to": "reminders", "title": "Earn awards", "sub": "Weekly challenges unlock the Crown", "bg": "#fff0c4", "speed": 1.0},
+    {"from": "reminders", "to": "paywall", "title": "Gentle reminders", "sub": "Only during your active hours", "bg": "#e0f3ff", "speed": 1.1},
+    {"from": "paywall", "to": "smart", "title": "Sippo+ for €2.99", "sub": "Pay once. Yours forever.", "bg": "#fff3d1", "speed": 1.2, "plus": true},
+    {"from": "smart", "to": "wardrobe", "title": "Smart reminders & themes", "sub": "Midnight, Ocean & Sunset", "bg": "#151730", "dark": true, "speed": 1.2, "plus": true},
+    {"from": "wardrobe", "to": "drinks", "title": "Dress up every friend", "sub": "Pingo, Axel, bows, shades & crowns", "bg": "#e7e3fb", "speed": 1.4, "plus": true},
+    {"from": "drinks", "to": "goal", "title": "More drinks", "sub": "Milk, soda, smoothies & sports drinks", "bg": "#ffdbe6", "speed": 1.2, "plus": true},
+    {"from": "goal", "to": "history-premium", "title": "Celebrate every goal", "sub": "Your buddy does a happy dance", "bg": "#d9e8ff", "speed": 2.2, "tailNormal": 6.0},
+    {"from": "history-premium", "to": "end", "title": "Unlimited history", "sub": "Every month, plus CSV export", "bg": "#e2e0ff", "speed": 1.2, "plus": true}
+  ]
+}

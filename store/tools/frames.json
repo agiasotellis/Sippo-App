@@ -1,0 +1,13 @@
+[
+  {"src": "01_pool", "out": "01_friends", "title": "Hydration is better with friends", "sub": "Meet Ottie, Pingo & Axel", "bg": "#cfe4ff", "accent": "#5b63ee"},
+  {"src": "02_today", "out": "02_bowl", "title": "Watch your bowl fill up", "sub": "Every sip makes the water rise", "bg": "#e2e0ff", "accent": "#5b63ee"},
+  {"src": "03_pour", "out": "03_pour", "title": "Just hold to pour", "sub": "Log a drink in one gesture", "bg": "#d4f1e8", "accent": "#12a3a8"},
+  {"src": "04_stats", "out": "04_stats", "title": "See your progress", "sub": "Daily ring, weekly chart & streaks", "bg": "#ffe3d3", "accent": "#ff6f61"},
+  {"src": "05_history", "out": "05_history", "title": "Every day, remembered", "sub": "Tap any day to see what you drank", "bg": "#fff0c4", "accent": "#e8a400"},
+  {"src": "06_awards", "out": "06_awards", "title": "Earn awards & badges", "sub": "Weekly challenges keep you going", "bg": "#ffdbe6", "accent": "#e0457b"},
+  {"src": "07_wardrobe", "out": "07_wardrobe", "title": "Dress up your buddy", "sub": "Caps, bows, shades & a royal crown", "bg": "#e7e3fb", "accent": "#8a6cf5"},
+  {"src": "08_midnight", "out": "08_themes", "title": "Make it yours", "sub": "Midnight, Ocean & Sunset themes", "bg": "#151730", "accent": "#7d84ff", "dark": true},
+  {"src": "11_goal", "out": "09_goal", "title": "Celebrate every goal", "sub": "Your buddy does a happy dance", "bg": "#d9e8ff", "accent": "#5b63ee"},
+  {"src": "09_reminders", "out": "10_reminders", "title": "Gentle reminders", "sub": "Only when you need them", "bg": "#e0f3ff", "accent": "#3f7ff5"},
+  {"src": "10_paywall", "out": "11_plus", "title": "Pay once. Yours forever.", "sub": "No ads, no subscription, no account", "bg": "#fff3d1", "accent": "#e8a400"}
+]
