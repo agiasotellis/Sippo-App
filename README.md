@@ -43,7 +43,12 @@ app/src/main/java/com/sippo/app/
 
 ## Building
 
-CI (`.github/workflows/android.yml`) runs unit tests, lint and `assembleDebug` on every push and pull request. The debug APK is attached to each run as the `sippo-debug-apk` artifact.
+CI (`.github/workflows/android.yml`) runs on every push and pull request:
+
+- unit tests, lint and `assembleDebug`, with the debug APK attached to the run as the `sippo-debug-apk` artifact
+- an emulator smoke test (`app/src/androidTest/.../SmokeTest.kt`) on API 34. It walks through the whole app: onboarding, add, undo, pour, edit, every tab, the paywall, a theme switch and the wardrobe.
+
+When a step fails, its compiler, lint or crash output also appears as an annotation on the run summary.
 
 Locally you need JDK 17 and the Android SDK (API 35):
 
