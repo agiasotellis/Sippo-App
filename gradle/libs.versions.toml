@@ -10,6 +10,9 @@ work = "2.10.0"
 billing = "7.1.1"
 splashscreen = "1.0.1"
 junit = "4.13.2"
+androidxJunit = "1.2.1"
+testRunner = "1.6.2"
+uiautomator = "2.3.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -27,6 +30,9 @@ androidx-work-runtime-ktx = { group = "androidx.work", name = "work-runtime-ktx"
 androidx-core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "splashscreen" }
 billing-ktx = { group = "com.android.billingclient", name = "billing-ktx", version.ref = "billing" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
+androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidxJunit" }
+androidx-test-runner = { group = "androidx.test", name = "runner", version.ref = "testRunner" }
+androidx-uiautomator = { group = "androidx.test.uiautomator", name = "uiautomator", version.ref = "uiautomator" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

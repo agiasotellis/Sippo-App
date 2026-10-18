@@ -24,6 +24,7 @@ android {
         targetSdk = 35
         versionCode = (System.getenv("VERSION_CODE") ?: "1").toInt()
         versionName = "1.0.0"
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     signingConfigs {
@@ -84,4 +85,7 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
 
     testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.test.runner)
+    androidTestImplementation(libs.androidx.uiautomator)
 }
