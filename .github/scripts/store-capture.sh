@@ -39,14 +39,17 @@ run() {
 status=0
 run screenshots || status=1
 adb pull /sdcard/Android/data/$APP/files/store/. "$OUT/screenshots/" > /dev/null
-rm -f "$OUT/screenshots/timeline.tsv"
 
-# 2) Tour recording. screenrecord stops after 180 s, so record back-to-back segments.
+# 2) Tour recording. The software-rendered emulator is too slow for smooth video at full size,
+#    so drop to 540×1200 at the same dp width. screenrecord stops after 180 s: record segments.
 adb shell rm -rf /sdcard/Android/data/$APP/files/store
+adb shell wm size 540x1200
+adb shell wm density 210
+sleep 3
 (
   for i in 1 2 3; do
     echo "seg$i $(adb shell date +%s%3N | tr -d '\r')" >> "$OUT/video/segments.txt"
-    adb shell screenrecord --bit-rate 12000000 --time-limit 180 /sdcard/tour$i.mp4
+    adb shell screenrecord --bit-rate 6000000 --time-limit 180 /sdcard/tour$i.mp4
   done
 ) &
 rec=$!
@@ -57,6 +60,7 @@ adb shell pkill -INT screenrecord || true
 sleep 3
 kill $rec 2> /dev/null || true
 for i in 1 2 3; do adb pull /sdcard/tour$i.mp4 "$OUT/video/" > /dev/null 2>&1 || true; done
-adb pull /sdcard/Android/data/$APP/files/store/timeline.tsv "$OUT/video/" > /dev/null 2>&1 || true
+adb pull /sdcard/Android/data/$APP/files/store/. "$OUT/video/" > /dev/null 2>&1 || true
+adb shell wm size reset; adb shell wm density reset
 ls -laR "$OUT"
 exit $status

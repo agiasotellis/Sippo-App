@@ -59,7 +59,11 @@ class StoreCapture {
     private fun find(sel: BySelector, what: String, timeout: Long = 10_000): UiObject2 =
         device.wait(Until.findObject(sel), timeout)
             ?: run { dismissSystemDialogs(); device.wait(Until.findObject(sel), timeout) }
-            ?: error("Not on screen: $what")
+            ?: run {
+                device.takeScreenshot(File(out, "fail.png"))
+                val seen = runCatching { device.findObjects(By.text(java.util.regex.Pattern.compile(".+"))).joinToString(" | ") { it.text } }.getOrDefault("?")
+                error("Not on screen: $what. Visible: $seen")
+            }
 
     private fun <T> retry(block: () -> T): T {
         repeat(4) { attempt ->
