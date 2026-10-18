@@ -25,8 +25,19 @@ class SmokeTest {
     private val device = UiDevice.getInstance(instr)
     private val pkg = instr.targetContext.packageName
 
+    /** CI emulators sometimes show "System UI / Launcher isn't responding" over everything. */
+    private fun dismissSystemDialogs() {
+        repeat(3) {
+            val w = device.findObject(By.text("Wait")) ?: device.findObject(By.text("Close app")) ?: return
+            w.click()
+            device.waitForIdle(1_000)
+        }
+    }
+
     private fun find(sel: BySelector, what: String, timeout: Long = 8_000): UiObject2 =
-        device.wait(Until.findObject(sel), timeout) ?: error("Not on screen: $what. Visible: ${visibleTexts()}")
+        device.wait(Until.findObject(sel), timeout)
+            ?: run { dismissSystemDialogs(); device.wait(Until.findObject(sel), timeout) }
+            ?: error("Not on screen: $what. Visible: ${visibleTexts()}")
 
     private fun visibleTexts(): String = runCatching {
         "[${device.currentPackageName}] " + device.findObjects(By.text(Pattern.compile(".+"))).joinToString(" | ") { it.text }
@@ -40,6 +51,7 @@ class SmokeTest {
 
     @Test
     fun walkThroughEverything() {
+        dismissSystemDialogs()
         val launch = instr.targetContext.packageManager.getLaunchIntentForPackage(pkg)!!
             .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
         instr.targetContext.startActivity(launch)
