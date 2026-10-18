@@ -12,6 +12,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.util.regex.Pattern
 
 /**
  * Walks the whole app on a fresh install the way a person would. UiAutomator is used instead of the
@@ -25,7 +26,11 @@ class SmokeTest {
     private val pkg = instr.targetContext.packageName
 
     private fun find(sel: BySelector, what: String, timeout: Long = 8_000): UiObject2 =
-        device.wait(Until.findObject(sel), timeout) ?: error("Not on screen: $what")
+        device.wait(Until.findObject(sel), timeout) ?: error("Not on screen: $what. Visible: ${visibleTexts()}")
+
+    private fun visibleTexts(): String = runCatching {
+        "[${device.currentPackageName}] " + device.findObjects(By.text(Pattern.compile(".+"))).joinToString(" | ") { it.text }
+    }.getOrElse { "?" }
 
     private fun text(t: String, timeout: Long = 8_000) = find(By.text(t), "\"$t\"", timeout)
 
