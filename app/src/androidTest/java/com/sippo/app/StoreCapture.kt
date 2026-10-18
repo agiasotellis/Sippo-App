@@ -128,6 +128,7 @@ class StoreCapture {
             list += Entry(id++, today, listOf(7 * 60 + 40, 9 * 60 + 15, 11 * 60 + 5, 13 * 60 + 30, 15 * 60 + 10)[i], d, ml)
             left -= ml
         }
+        if (left > 0) list += Entry(id, today, 16 * 60 + 40, Drink.WATER, left)
         return list
     }
 
