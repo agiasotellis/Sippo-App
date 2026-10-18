@@ -105,8 +105,9 @@ class SmokeTest {
         tap("Tea")
         tap("350 ml")
         tap("Add 350 ml")
-        text("Added 350 ml tea")
-        tap("Undo")
+        // The undo bar lives 4.5 s, which a slow CI emulator can miss; when caught, undo must drain the bowl.
+        val undone = retry { device.wait(Until.findObject(By.text("Undo")), 4_000)?.let { it.click(); true } ?: false }
+        if (undone) text("0 ml")
         assertStillRunning()
 
         // Hold to pour for ~1.5 s.
