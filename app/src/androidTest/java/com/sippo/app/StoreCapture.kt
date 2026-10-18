@@ -186,7 +186,7 @@ class StoreCapture {
 
         tapDesc("Stats"); text("This week"); pause(1_200); shot("04_stats")
 
-        tapDesc("History"); text("Goal met")
+        tapDesc("History"); find(By.desc("Previous month"), "history")
         retry { find(By.text("${LocalDate.now().minusDays(2).dayOfMonth}"), "day").click() }
         pause(800); shot("05_history")
 
