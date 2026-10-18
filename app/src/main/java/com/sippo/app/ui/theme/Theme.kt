@@ -19,6 +19,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
@@ -107,7 +108,8 @@ fun ts(size: Int, weight: Int = 700, color: Color = Color.Unspecified, tracking:
 @Composable
 fun Icon(glyph: String, size: Int, color: Color, modifier: Modifier = Modifier) {
     val px = with(LocalDensity.current) { size.dp.toSp() }
-    Box(modifier.wrapContentSize(), contentAlignment = Alignment.Center) {
+    // Glyphs are private-use code points; keep them out of the accessibility tree.
+    Box(modifier.wrapContentSize().clearAndSetSemantics { }, contentAlignment = Alignment.Center) {
         Text(
             glyph,
             style = TextStyle(

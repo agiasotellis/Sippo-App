@@ -35,6 +35,12 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.asAndroidPath
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.selected
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.sippo.app.ui.theme.Icon
 import com.sippo.app.ui.theme.LocalSippo
@@ -139,13 +145,17 @@ fun NavBar(tabs: List<NavTab>, active: Int, onTab: (Int) -> Unit, modifier: Modi
                 val lop by animateFloatAsState(if (on) 1f else 0f, tween(300), label = "lop")
                 val lty by animateFloatAsState(if (on) 0f else 6f, tween(400), label = "lty")
                 val col by androidx.compose.animation.animateColorAsState(if (on) Color.White else Pal.navIdle, tween(300), label = "col")
-                Box(Modifier.width(tw.dp).fillMaxHeight().tap { onTab(i) }, contentAlignment = Alignment.Center) {
+                Box(
+                    Modifier.width(tw.dp).fillMaxHeight().tap { onTab(i) }
+                        .semantics(mergeDescendants = true) { contentDescription = tab.label; role = Role.Tab; selected = on },
+                    contentAlignment = Alignment.Center,
+                ) {
                     Icon(tab.icon, 20, col, Modifier.graphicsLayer { translationY = lift * density })
                     Text(
                         tab.label,
                         style = ts(10, 800, Color.White, tracking = .03f),
                         maxLines = 1,
-                        modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 10.dp)
+                        modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 10.dp).clearAndSetSemantics { }
                             .graphicsLayer { alpha = lop; translationY = lty * density },
                     )
                 }

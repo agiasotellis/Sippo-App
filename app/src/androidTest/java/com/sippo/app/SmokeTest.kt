@@ -58,6 +58,8 @@ class SmokeTest {
 
     private fun tap(t: String) = retry { text(t).click() }
 
+    private fun tab(label: String) = retry { find(By.desc(label), "tab $label").click() }
+
     private fun assertStillRunning() = assertEquals("App left the foreground (crash?)", pkg, device.currentPackageName)
 
     @Test
@@ -122,10 +124,10 @@ class SmokeTest {
         assertStillRunning()
 
         // Every tab.
-        tap("Stats"); text("This week")
-        tap("History"); text("Free plan shows the last 7 days")
-        tap("Awards"); text("WEEKLY CHALLENGE")
-        tap("Reminders"); text("Remind me to drink")
+        tab("Stats"); text("This week")
+        tab("History"); text("Free plan shows the last 7 days")
+        tab("Awards"); text("WEEKLY CHALLENGE")
+        tab("Reminders"); text("Remind me to drink")
 
         // Themes are Sippo+; debug builds unlock locally when Play has no product.
         tap("Themes")
@@ -138,7 +140,7 @@ class SmokeTest {
         assertStillRunning()
 
         // Wardrobe with premium characters and accessories.
-        tap("Today")
+        tab("Today")
         tap("Wardrobe")
         text("CHARACTER")
         tap("Axel")
@@ -147,7 +149,7 @@ class SmokeTest {
         text("Hold to pour")
 
         // History is unlimited now.
-        tap("History")
+        tab("History")
         assertNotNull(device.wait(Until.findObject(By.text("Export history as CSV")), 8_000))
         assertStillRunning()
     }
