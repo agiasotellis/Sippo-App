@@ -36,9 +36,12 @@ run() {
 }
 
 # 1) Screenshots at the device's full 1080×2400.
+WHAT="${WHAT:-both}"
 status=0
-run screenshots || status=1
+if [ "$WHAT" != "tour" ]; then run screenshots || status=1; fi
 adb pull /sdcard/Android/data/$APP/files/store/. "$OUT/screenshots/" > /dev/null
+
+if [ "$WHAT" = "screenshots" ]; then ls -laR "$OUT"; exit $status; fi
 
 # 2) Tour recording. The software-rendered emulator is too slow for smooth video at full size,
 #    so drop to 540×1200 at the same dp width. screenrecord stops after 180 s: record segments.

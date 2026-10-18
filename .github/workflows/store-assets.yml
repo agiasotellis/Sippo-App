@@ -4,6 +4,12 @@ name: Store assets
 # then pushes the raw captures to the `store-captures` branch.
 on:
   workflow_dispatch:
+    inputs:
+      what:
+        description: What to capture
+        type: choice
+        options: [both, screenshots, tour]
+        default: both
 
 permissions:
   contents: write
@@ -39,7 +45,7 @@ jobs:
           ram-size: 4096M
           disable-animations: false
           emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim
-          script: .github/scripts/store-capture.sh
+          script: WHAT=${{ inputs.what }} .github/scripts/store-capture.sh
 
       - name: Push captures to store-captures branch
         if: always()

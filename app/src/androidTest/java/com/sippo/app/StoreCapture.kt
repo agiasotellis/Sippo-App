@@ -73,8 +73,12 @@ class StoreCapture {
     }
 
     private fun text(t: String) = find(By.text(t), "\"$t\"")
-    private fun tap(t: String) = retry { text(t).click() }
-    private fun tapDesc(d: String) = retry { find(By.desc(d), "tab $d").click() }
+    private fun tap(t: String) = retry { closeCelebrationIfShown(); text(t).click() }
+    private fun tapDesc(d: String) = retry { closeCelebrationIfShown(); find(By.desc(d), "tab $d").click() }
+
+    private fun closeCelebrationIfShown() {
+        device.findObject(By.text("Yay!"))?.let { runCatching { it.click() }; Thread.sleep(800) }
+    }
     private fun pause(ms: Long) = Thread.sleep(ms)
 
     /** A long emulator hold can cross the goal early; close the celebration if it shows up. */
@@ -175,9 +179,9 @@ class StoreCapture {
         // Mid-pour: hold the button on another thread and capture while the stream runs.
         val pour = retry { text("Hold to pour").visibleCenter }
         // Emulator holds run ~50 ms per swipe step.
-        val holder = Thread { device.swipe(pour.x, pour.y, pour.x, pour.y, 60) }
+        val holder = Thread { device.swipe(pour.x, pour.y, pour.x, pour.y, 20) }
         holder.start()
-        pause(1_800)
+        pause(700)
         device.takeScreenshot(File(out, "03_pour.png"))
         holder.join()
         clearCelebration()
