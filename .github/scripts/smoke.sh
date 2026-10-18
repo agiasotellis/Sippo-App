@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 # Runs the emulator smoke test; on failure, reports the crash from logcat as an annotation.
+# Freshly booted CI emulators often raise "Launcher isn't responding" dialogs that swallow taps.
+adb shell settings put global hide_error_dialogs 1 || true
+adb shell input keyevent 82 || true
+sleep 20
 adb logcat -c || true
 .github/scripts/gradle.sh connectedDebugAndroidTest
 status=$?
