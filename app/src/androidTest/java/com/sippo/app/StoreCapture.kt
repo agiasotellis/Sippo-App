@@ -151,9 +151,10 @@ class StoreCapture {
         repo.saveEntries(if (entries) demoEntries(todayMl) else emptyList())
     }
 
-    private fun launch(screenWait: String) {
+    private fun launch(screenWait: String, paywall: Boolean = false) {
         val intent = ctx.packageManager.getLaunchIntentForPackage(pkg)!!
             .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            .putExtra(MainActivity.EXTRA_PAYWALL, paywall)
         ctx.startActivity(intent)
         device.wait(Until.hasObject(By.pkg(pkg).depth(0)), 15_000)
         text(screenWait)
@@ -205,8 +206,7 @@ class StoreCapture {
         tapDesc("Reminders"); text("Remind me to drink"); shot("09_reminders")
 
         seed(premium = false, acc = Accessory.CAP)
-        launch("Hold to pour")
-        tapDesc("Reminders"); tap("Get Sippo+"); text("Unlock Sippo+"); pause(1_500); shot("10_paywall")
+        launch("Unlock Sippo+", paywall = true); pause(1_500); shot("10_paywall")
 
         seed(theme = "sunset", mascot = Mascot.PINGO, acc = Accessory.CROWN, todayMl = 2400)
         launch("Hold to pour")
