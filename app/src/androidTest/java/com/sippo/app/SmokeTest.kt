@@ -78,9 +78,9 @@ class SmokeTest {
         // Android 13+ asks for notifications here.
         device.wait(Until.findObject(By.text("Allow")), 10_000)?.click()
 
-        // Home with the Sippo+ promo.
+        // Home, with the Sippo+ promo shortly after landing.
+        tap("Maybe later")
         text("Today")
-        device.wait(Until.findObject(By.text("Maybe later")), 6_000)?.click()
         text("Hold to pour")
 
         // Add a drink from the sheet, then undo it.
