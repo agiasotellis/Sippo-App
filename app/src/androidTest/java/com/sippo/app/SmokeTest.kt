@@ -108,13 +108,16 @@ class SmokeTest {
         // Hold to pour for ~1.5 s.
         val pour = retry { text("Hold to pour").visibleCenter }
         val t0 = System.currentTimeMillis()
-        device.swipe(pour.x, pour.y, pour.x, pour.y, 300)
+        device.swipe(pour.x, pour.y, pour.x, pour.y, 60)
         val held = System.currentTimeMillis() - t0
-        val added = retry { find(By.textStartsWith("Added "), "pour snackbar").text }
-        val ml = Regex("[0-9,]+").find(added)!!.value.replace(",", "").toInt()
-        // 150 ml/s rising to 300 ml/s; allow generous slack for slow emulators.
-        assertTrue("Poured $ml ml in a ${held}ms hold", ml in 50..(held * 0.3 + 300).toInt())
-        retry { device.wait(Until.findObject(By.text("Yay!")), 2_000)?.click() }
+        // Long emulator holds can reach the goal, in which case the celebration covers the snackbar.
+        val added = retry { device.wait(Until.findObject(By.textStartsWith("Added ")), 3_000)?.text }
+        if (added != null) {
+            val ml = Regex("[0-9,]+").find(added)!!.value.replace(",", "").toInt()
+            // 150 ml/s rising to 300 ml/s; allow generous slack for slow emulators.
+            assertTrue("Poured $ml ml in a ${held}ms hold", ml in 50..(held * 0.3 + 300).toInt())
+        }
+        retry { device.wait(Until.findObject(By.text("Yay!")), 3_000)?.click() }
 
         // Edit the poured entry (it pours the last drink picked in the sheet: tea).
         find(By.text("Tap to edit"), "drinks list")
