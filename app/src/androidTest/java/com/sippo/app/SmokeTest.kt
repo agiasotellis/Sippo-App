@@ -10,6 +10,7 @@ import androidx.test.uiautomator.UiObject2
 import androidx.test.uiautomator.Until
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
 import java.util.regex.Pattern
@@ -95,8 +96,14 @@ class SmokeTest {
 
         // Hold to pour for ~1.5 s.
         val pour = text("Hold to pour").visibleCenter
+        val t0 = System.currentTimeMillis()
         device.swipe(pour.x, pour.y, pour.x, pour.y, 300)
-        find(By.textStartsWith("Added "), "pour snackbar")
+        val held = System.currentTimeMillis() - t0
+        val added = find(By.textStartsWith("Added "), "pour snackbar").text
+        val ml = Regex("[0-9,]+").find(added)!!.value.replace(",", "").toInt()
+        // 150 ml/s rising to 300 ml/s; allow generous slack for slow emulators.
+        assertTrue("Poured $ml ml in a ${held}ms hold", ml in 50..(held * 0.3 + 300).toInt())
+        device.wait(Until.findObject(By.text("Yay!")), 2_000)?.click()
 
         // Edit the poured entry (it pours the last drink picked in the sheet: tea).
         find(By.text("Tap to edit"), "drinks list")
