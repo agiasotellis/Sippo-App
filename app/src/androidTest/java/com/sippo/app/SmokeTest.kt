@@ -5,6 +5,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.By
 import androidx.test.uiautomator.BySelector
+import androidx.test.uiautomator.StaleObjectException
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiObject2
 import androidx.test.uiautomator.Until
@@ -31,7 +32,7 @@ class SmokeTest {
         repeat(3) {
             val w = device.findObject(By.text("Wait")) ?: device.findObject(By.text("Close app"))
                 ?: device.findObject(By.text("Allow")) ?: return
-            w.click()
+            try { w.click() } catch (_: StaleObjectException) { }
             device.waitForIdle(1_000)
         }
     }
@@ -47,7 +48,15 @@ class SmokeTest {
 
     private fun text(t: String, timeout: Long = 8_000) = find(By.text(t), "\"$t\"", timeout)
 
-    private fun tap(t: String) = text(t).click()
+    /** Re-finds the node when Compose replaces it between the lookup and the action. */
+    private fun <T> retry(block: () -> T): T {
+        repeat(4) { attempt ->
+            try { return block() } catch (e: StaleObjectException) { if (attempt == 3) throw e; device.waitForIdle(500) }
+        }
+        error("unreachable")
+    }
+
+    private fun tap(t: String) = retry { text(t).click() }
 
     private fun assertStillRunning() = assertEquals("App left the foreground (crash?)", pkg, device.currentPackageName)
 
@@ -77,7 +86,7 @@ class SmokeTest {
         tap("Start drinking")
 
         // Android 13+ asks for notifications here.
-        device.wait(Until.findObject(By.text("Allow")), 10_000)?.click()
+        retry { device.wait(Until.findObject(By.text("Allow")), 10_000)?.click() }
 
         // Home, with the Sippo+ promo shortly after landing.
         tap("Maybe later")
@@ -95,15 +104,15 @@ class SmokeTest {
         assertStillRunning()
 
         // Hold to pour for ~1.5 s.
-        val pour = text("Hold to pour").visibleCenter
+        val pour = retry { text("Hold to pour").visibleCenter }
         val t0 = System.currentTimeMillis()
         device.swipe(pour.x, pour.y, pour.x, pour.y, 300)
         val held = System.currentTimeMillis() - t0
-        val added = find(By.textStartsWith("Added "), "pour snackbar").text
+        val added = retry { find(By.textStartsWith("Added "), "pour snackbar").text }
         val ml = Regex("[0-9,]+").find(added)!!.value.replace(",", "").toInt()
         // 150 ml/s rising to 300 ml/s; allow generous slack for slow emulators.
         assertTrue("Poured $ml ml in a ${held}ms hold", ml in 50..(held * 0.3 + 300).toInt())
-        device.wait(Until.findObject(By.text("Yay!")), 2_000)?.click()
+        retry { device.wait(Until.findObject(By.text("Yay!")), 2_000)?.click() }
 
         // Edit the poured entry (it pours the last drink picked in the sheet: tea).
         find(By.text("Tap to edit"), "drinks list")

@@ -13,7 +13,7 @@ if [ $status -ne 0 ]; then
     crash=${crash//'%'/'%25'}; crash=${crash//$'\r'/''}; crash=${crash//$'\n'/'%0A'}
     echo "::error title=app crash::${crash}"
   fi
-  res=$(find app/build/outputs/androidTest-results -name '*.xml' -exec grep -h -A 12 '<failure' {} + 2>/dev/null | head -n 40 | cut -c1-300)
+  res=$(find app/build/outputs/androidTest-results -name '*.xml' -exec grep -h -A 25 '<failure' {} + 2>/dev/null | head -n 40 | cut -c1-300)
   if [ -n "$res" ]; then
     res=${res//'%'/'%25'}; res=${res//$'\r'/''}; res=${res//$'\n'/'%0A'}
     echo "::error title=smoke test failure::${res}"
