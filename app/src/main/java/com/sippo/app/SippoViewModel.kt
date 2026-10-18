@@ -10,6 +10,7 @@ import com.sippo.app.data.Drink
 import com.sippo.app.data.Entry
 import com.sippo.app.data.Mascot
 import com.sippo.app.data.Progress
+import com.sippo.app.data.ReminderSound
 import com.sippo.app.data.Settings
 import com.sippo.app.data.SippoRepository
 import com.sippo.app.data.Stored
@@ -47,6 +48,8 @@ data class UiState(
     val sheet: Boolean = false,
     val edit: EditState? = null,
     val themeSheet: Boolean = false,
+    val hoursSheet: Boolean = false,
+    val soundSheet: Boolean = false,
     val snack: String? = null,
     val snackUndo: Boolean = false,
     val snackId: Int = 0,
@@ -183,6 +186,8 @@ class SippoViewModel(app: Application) : AndroidViewModel(app) {
             u.edit != null -> _ui.update { it.copy(edit = null) }
             u.sheet -> _ui.update { it.copy(sheet = false) }
             u.themeSheet -> _ui.update { it.copy(themeSheet = false) }
+            u.hoursSheet -> closeHours()
+            u.soundSheet -> closeSound()
             u.screen == Screen.PAYWALL -> closePaywall()
             u.screen == Screen.ONB && u.step > 0 -> onbBack()
             u.screen == Screen.ONB -> go(Screen.WELCOME)
@@ -326,6 +331,27 @@ class SippoViewModel(app: Application) : AndroidViewModel(app) {
 
     fun toggleRemind() = setSettings { it.copy(remind = !it.remind) }
     fun setInterval(min: Int) = setSettings { it.copy(intervalMin = min) }
+
+    fun openHours() = _ui.update { it.copy(hoursSheet = true) }
+    fun closeHours() = _ui.update { it.copy(hoursSheet = false) }
+    /** Start and end hour of the reminder window; the window always spans at least one hour. */
+    fun setActiveStart(h: Int) = setSettings { it.copy(activeStart = h.coerceIn(0, it.activeEnd - 1)) }
+    fun setActiveEnd(h: Int) = setSettings { it.copy(activeEnd = h.coerceIn(it.activeStart + 1, 24)) }
+
+    fun openSound() = _ui.update { it.copy(soundSheet = true) }
+    fun closeSound() = _ui.update { it.copy(soundSheet = false) }
+    fun setSound(sound: ReminderSound) {
+        setSettings { it.copy(sound = sound) }
+        Reminders.createChannel(getApplication(), sound)
+        Reminders.preview(getApplication(), sound)
+    }
+
+    /** Posts a reminder right now, so the user can check the sound and that notifications are allowed. */
+    fun testReminder() {
+        val app = getApplication<Application>()
+        if (!Reminders.canNotify(app)) return showSnack("Notifications are off for Sippo in system settings")
+        Reminders.notify(app, s.sound, "Time for a sip!", "${s.mascot.label} says hi. This is a test reminder.")
+    }
     fun smartTap() = if (s.premium) setSettings { it.copy(smart = !it.smart) } else openPaywall(Screen.SETTINGS)
     fun themeTap() = if (s.premium) _ui.update { it.copy(themeSheet = true) } else openPaywall(Screen.SETTINGS)
     fun closeTheme() = _ui.update { it.copy(themeSheet = false) }

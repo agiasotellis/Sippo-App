@@ -43,6 +43,8 @@ import com.sippo.app.ui.screens.Celebration
 import com.sippo.app.ui.screens.EditSheet
 import com.sippo.app.ui.screens.HistoryScreen
 import com.sippo.app.ui.screens.HomeScreen
+import com.sippo.app.ui.screens.HoursSheet
+import com.sippo.app.ui.screens.SoundSheet
 import com.sippo.app.ui.screens.OnboardingScreen
 import com.sippo.app.ui.screens.PaywallScreen
 import com.sippo.app.ui.screens.Promo
@@ -105,6 +107,8 @@ fun SippoApp(vm: SippoViewModel, onExit: () -> Unit) {
                 AddDrinkSheet(ui, vm)
                 EditSheet(ui, vm)
                 ThemeSheet(ui, vm)
+                HoursSheet(ui, vm)
+                SoundSheet(ui, vm)
                 Promo(ui, vm)
                 Celebration(ui, vm)
             }

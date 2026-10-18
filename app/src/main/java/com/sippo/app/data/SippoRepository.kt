@@ -33,6 +33,9 @@ class SippoRepository private constructor(private val context: Context) {
         val remind = booleanPreferencesKey("remind")
         val interval = intPreferencesKey("interval")
         val smart = booleanPreferencesKey("smart")
+        val activeStart = intPreferencesKey("active_start")
+        val activeEnd = intPreferencesKey("active_end")
+        val sound = stringPreferencesKey("sound")
         val theme = stringPreferencesKey("theme")
         val premium = booleanPreferencesKey("premium")
         val lastDrink = stringPreferencesKey("last_drink")
@@ -58,6 +61,9 @@ class SippoRepository private constructor(private val context: Context) {
             p[K.remind] = s.remind
             p[K.interval] = s.intervalMin
             p[K.smart] = s.smart
+            p[K.activeStart] = s.activeStart
+            p[K.activeEnd] = s.activeEnd
+            p[K.sound] = s.sound.key
             p[K.theme] = s.theme
             p[K.premium] = s.premium
             p[K.lastDrink] = s.lastDrink.key
@@ -89,6 +95,9 @@ class SippoRepository private constructor(private val context: Context) {
             remind = this[K.remind] ?: d.remind,
             intervalMin = this[K.interval] ?: d.intervalMin,
             smart = this[K.smart] ?: d.smart,
+            activeStart = this[K.activeStart] ?: d.activeStart,
+            activeEnd = this[K.activeEnd] ?: d.activeEnd,
+            sound = ReminderSound.of(this[K.sound] ?: d.sound.key),
             theme = this[K.theme] ?: d.theme,
             premium = this[K.premium] ?: d.premium,
             lastDrink = Drink.of(this[K.lastDrink] ?: d.lastDrink.key),

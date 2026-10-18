@@ -124,14 +124,14 @@ fun SettingsScreen(ui: UiState, vm: SippoViewModel) {
                     if (s.premium) Switch(s.smart, null) else PlusTag(height = 24.dp)
                 }
                 Divider()
-                Row(Modifier.fillMaxWidth().padding(vertical = 14.dp), horizontalArrangement = Arrangement.SpaceBetween) {
+                Row(Modifier.fillMaxWidth().tap(vm::openHours).padding(vertical = 14.dp), horizontalArrangement = Arrangement.SpaceBetween) {
                     Text("Active hours", style = ts(14, 700, th.ink))
-                    Text("%02d:00 – %02d:00".format(Reminders.ACTIVE_START_HOUR, Reminders.ACTIVE_END_HOUR), style = ts(14, 700, th.acc))
+                    Text(hoursLabel(s.activeStart, s.activeEnd), style = ts(14, 700, th.acc))
                 }
                 Divider()
-                Row(Modifier.fillMaxWidth().padding(vertical = 14.dp), horizontalArrangement = Arrangement.SpaceBetween) {
+                Row(Modifier.fillMaxWidth().tap(vm::openSound).padding(vertical = 14.dp), horizontalArrangement = Arrangement.SpaceBetween) {
                     Text("Sound", style = ts(14, 700, th.ink))
-                    Text("Bubble pop", style = ts(14, 700, th.acc))
+                    Text(s.sound.label, style = ts(14, 700, th.acc))
                 }
             }
         }
@@ -181,6 +181,8 @@ fun SettingsScreen(ui: UiState, vm: SippoViewModel) {
         }
     }
 }
+
+fun hoursLabel(start: Int, end: Int) = "%02d:00 – %02d:00".format(start, end)
 
 @Composable
 fun SquareButton(glyph: String, size: Int, radius: Int, icon: Int, onClick: () -> Unit) {

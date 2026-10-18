@@ -47,6 +47,7 @@ import com.sippo.app.Screen
 import com.sippo.app.SippoViewModel
 import com.sippo.app.UiState
 import com.sippo.app.data.Drink
+import com.sippo.app.data.ReminderSound
 import com.sippo.app.ui.components.BottomSheet
 import com.sippo.app.ui.components.PopEase
 import com.sippo.app.ui.components.SippoSlider
@@ -339,5 +340,65 @@ fun BoxScope.Celebration(ui: UiState, vm: SippoViewModel) {
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun HourStepper(label: String, hour: Int, onChange: (Int) -> Unit) {
+    val th = LocalSippo.current
+    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+        Text(label, style = ts(14, 700, th.ink))
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+            SquareButton(Sym.REMOVE, 40, 14, 22) { onChange(hour - 1) }
+            Text("%02d:00".format(hour), style = ts(20, 800, th.ink).copy(textAlign = TextAlign.Center), modifier = Modifier.widthIn(min = 72.dp))
+            SquareButton(Sym.ADD, 40, 14, 22) { onChange(hour + 1) }
+        }
+    }
+}
+
+@Composable
+fun BoxScope.HoursSheet(ui: UiState, vm: SippoViewModel) {
+    val th = LocalSippo.current
+    val s = ui.settings
+    BottomSheet(ui.hoursSheet, vm::closeHours) {
+        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+            Text("Active hours", style = ts(20, 800, th.ink))
+            Text("${s.mascot.label} only reminds you between these times.", style = ts(13, 400, th.sub))
+        }
+        HourStepper("From", s.activeStart, vm::setActiveStart)
+        HourStepper("Until", s.activeEnd, vm::setActiveEnd)
+        PrimaryButton("Done", vm::closeHours, height = 54.dp)
+    }
+}
+
+@Composable
+fun BoxScope.SoundSheet(ui: UiState, vm: SippoViewModel) {
+    val th = LocalSippo.current
+    val s = ui.settings
+    BottomSheet(ui.soundSheet, vm::closeSound) {
+        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+            Text("Reminder sound", style = ts(20, 800, th.ink))
+            Text("Tap a sound to hear it.", style = ts(13, 400, th.sub))
+        }
+        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            ReminderSound.entries.forEach { snd ->
+                val on = snd == s.sound
+                Row(
+                    Modifier.fillMaxWidth()
+                        .then(if (on) Modifier.ring(2.dp, th.acc, 16.dp) else Modifier)
+                        .background(th.soft2, RoundedCornerShape(16.dp)).tap { vm.setSound(snd) }
+                        .padding(horizontal = 16.dp, vertical = 14.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(snd.label, style = ts(14, 700, th.ink))
+                    if (on) Icon(Sym.CHECK_CIRCLE, 20, th.acc)
+                }
+            }
+        }
+        Box(
+            Modifier.fillMaxWidth().height(50.dp).background(th.soft, RoundedCornerShape(18.dp)).press(onClick = vm::testReminder),
+            contentAlignment = Alignment.Center,
+        ) { Text("Send a test reminder", style = ts(14, 700, th.acc)) }
+        PrimaryButton("Done", vm::closeSound, height = 54.dp)
     }
 }

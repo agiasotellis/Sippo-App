@@ -66,6 +66,17 @@ enum class Accessory(val key: String, val label: String, val icon: String, val p
 
 enum class Units { ML, OZ }
 
+/** Reminder sound. Each maps to its own notification channel, because a channel's sound is fixed once created. */
+enum class ReminderSound(val key: String, val label: String) {
+    POP("pop", "Bubble pop"),
+    DEFAULT("default", "Phone default"),
+    SILENT("silent", "Silent");
+
+    companion object {
+        fun of(key: String): ReminderSound = entries.firstOrNull { it.key == key } ?: POP
+    }
+}
+
 data class Settings(
     val onboarded: Boolean = false,
     val mascot: Mascot = Mascot.OTTIE,
@@ -77,6 +88,9 @@ data class Settings(
     val remind: Boolean = true,
     val intervalMin: Int = 90,
     val smart: Boolean = true,
+    val activeStart: Int = 8,
+    val activeEnd: Int = 22,
+    val sound: ReminderSound = ReminderSound.POP,
     val theme: String = "lavender",
     val premium: Boolean = false,
     val lastDrink: Drink = Drink.WATER,

@@ -137,6 +137,19 @@ class SmokeTest {
         tab("Awards"); text("WEEKLY CHALLENGE")
         tab("Reminders"); text("Remind me to drink")
 
+        // Active hours and reminder sound.
+        tap("08:00 – 22:00")
+        text("Active hours")
+        retry { device.wait(Until.findObject(By.text("From")), 4_000) }
+        tap("Done")
+        text("08:00 – 22:00")
+        tap("Bubble pop")
+        text("Reminder sound")
+        tap("Phone default")
+        tap("Send a test reminder")
+        tap("Done")
+        text("Phone default")
+
         // Themes are Sippo+; debug builds unlock locally when Play has no product.
         tap("Themes")
         tap("Unlock Sippo+")
